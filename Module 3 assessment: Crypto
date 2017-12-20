@@ -1,7 +1,11 @@
+// For this project you will be writing methods of encrypting and decrypting text.
+
 import java.util.*;
 
 public class Crypto {
     public static void main(String[] args) {
+        // Part 4 - Putting it all together
+        // This piece was moved to main to keep all the S.o.p. together
         System.out.print("Enter plain text: ");
         Scanner input0 = new Scanner(System.in);
         String plain_text = input0.nextLine();
@@ -38,13 +42,13 @@ public class Crypto {
             System.out.print("Goodbye");
         }
     }
-
+    // Part 1 - Normalize Text
     public static String normalizeText(String plain_text) {
         return plain_text.replaceAll("\\s","")
                 .toUpperCase()
                 .replaceAll("[.,:;’”!?()]","");
     }
-
+    // Part 2 - Caesar Cipher
     public static String caesarify(String normalizedText, int key) {
         String cypher_text = "";
         int L = normalizedText.length();
@@ -59,7 +63,7 @@ public class Crypto {
         }
         return cypher_text;
     }
-
+    // Part 3 - Codegroups
     public static String groupify(String cypher_text, int group_size) {
         String group_text = "";
         int L = cypher_text.length();
@@ -78,7 +82,7 @@ public class Crypto {
         }
         return group_text;
     }
-
+    // Part 5 - Hacker Problem - Decrypt
     public static String decryptString(String group_text, int key2) {
         String cypher_text2 = group_text.replaceAll("[ ,x]","");
         int L = cypher_text2.length();
