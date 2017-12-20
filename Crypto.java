@@ -1,0 +1,97 @@
+import java.util.*;
+
+public class Crypto {
+    public static void main(String[] args) {
+        System.out.print("Enter plain text: ");
+        Scanner input0 = new Scanner(System.in);
+        String plain_text = input0.nextLine();
+        String normalizedText = normalizeText(plain_text);
+        System.out.println("Plain text has been converted to normalized text: "+normalizedText);
+
+        System.out.print("Enter the Caesar encryption key: ");
+        Scanner input1 = new Scanner(System.in);
+        int key = input1.nextInt();
+        String cypher_text = caesarify(normalizedText,key);
+        System.out.println("Normalized text has been converted to cypher text: "+cypher_text);
+
+        System.out.print("Enter code group length: ");
+        Scanner input2 = new Scanner(System.in);
+        int group_size = input2.nextInt();
+        String group_text = groupify(cypher_text,group_size);
+        System.out.println("Cypher text has been separated into code groups: "+group_text);
+
+        System.out.print("Would you like to decrypt? ['Y' or 'N']: ");
+        Scanner input3 = new Scanner(System.in);
+        String choice = input3.next().toUpperCase();
+        if (choice.equals("Y")) {
+            System.out.print("Enter the decryption key: ");
+            Scanner input4 = new Scanner(System.in);
+            int key2 = input4.nextInt();
+            String normalizedText2 = decryptString(group_text,key2);
+            System.out.println("The decrypted normalized text is: "+normalizedText2);
+            if (normalizedText2.equals(normalizedText)) {
+                System.out.println("Decryption successful! :)");
+            } else {
+                System.out.println("Decryption unsuccessful! :(");
+            }
+        } else {
+            System.out.print("Goodbye");
+        }
+    }
+
+    public static String normalizeText(String plain_text) {
+        return plain_text.replaceAll("\\s","")
+                .toUpperCase()
+                .replaceAll("[.,:;’”!?()]","");
+    }
+
+    public static String caesarify(String normalizedText, int key) {
+        String cypher_text = "";
+        int L = normalizedText.length();
+        key = key%26;
+        for (int i = 0; i < L; i++) {
+            char old_c = normalizedText.charAt(i);
+            int ascii = (int) old_c + key;
+            if (ascii > 91) {
+                ascii -= 26;
+            }
+            cypher_text += (char) ascii;
+        }
+        return cypher_text;
+    }
+
+    public static String groupify(String cypher_text, int group_size) {
+        String group_text = "";
+        int L = cypher_text.length();
+        for (int i = 0; i <= L - group_size; i += group_size) {
+            String one_group = cypher_text.substring(i,i + group_size);
+            group_text += one_group + " ";
+        }
+        if (L % group_size != 0) {
+            int last_letters = L % group_size;
+            int pads = group_size - last_letters;
+            String last_group = cypher_text.substring(L - last_letters, L);
+            for (int i = 0; i < pads; i++) {
+                last_group += "x";
+            }
+            group_text += last_group;
+        }
+        return group_text;
+    }
+
+    public static String decryptString(String group_text, int key2) {
+        String cypher_text2 = group_text.replaceAll("[ ,x]","");
+        int L = cypher_text2.length();
+        String normalizedText2 = "";
+        key2 = key2%26;
+        for (int i = 0; i < L; i++) {
+            char old_c = cypher_text2.charAt(i);
+            int ascii = (int) old_c - key2;
+            if (ascii < 65) {
+                ascii += 26;
+            }
+            normalizedText2 += (char) ascii;
+        }
+        return normalizedText2;
+    }
+}
